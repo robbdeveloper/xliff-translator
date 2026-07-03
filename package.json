@@ -8,6 +8,13 @@
   "scripts": {
     "dev": "concurrently \"npm run dev -w @xliff-translator/server\" \"npm run dev -w @xliff-translator/web\"",
     "build": "npm run build -w @xliff-translator/core && npm run build -w @xliff-translator/server && npm run build -w @xliff-translator/web",
+    "build:desktop": "npm run build && npm run build -w @xliff-translator/desktop",
+    "desktop:dev": "npm run build:desktop && npm run dev -w @xliff-translator/desktop",
+    "desktop:pack": "npm run build:desktop && npm run pack -w @xliff-translator/desktop",
+    "desktop:dist": "npm run build:desktop && npm run dist -w @xliff-translator/desktop",
+    "desktop:dist:mac": "npm run build:desktop && npm run dist:mac -w @xliff-translator/desktop",
+    "desktop:dist:win": "npm run build:desktop && npm run dist:win -w @xliff-translator/desktop",
+    "desktop:dist:linux": "npm run build:desktop && npm run dist:linux -w @xliff-translator/desktop",
     "test": "npm run test -w @xliff-translator/core",
     "start": "npm run start -w @xliff-translator/server"
   },

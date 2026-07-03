@@ -1,0 +1,82 @@
+{
+  "name": "@xliff-translator/desktop",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Desktop app for XLIFF Translator",
+  "author": "XLIFF Translator",
+  "main": "dist/main.js",
+  "scripts": {
+    "generate-icon": "node scripts/generate-icon.mjs",
+    "build:main": "tsc",
+    "build": "npm run generate-icon && npm run build:main",
+    "dev": "npm run build:main && node scripts/with-electron-env.mjs electron .",
+    "pack": "npm run build && node scripts/with-electron-env.mjs electron-builder --dir",
+    "dist": "npm run build && node scripts/with-electron-env.mjs electron-builder",
+    "dist:mac": "npm run build && node scripts/with-electron-env.mjs electron-builder --mac",
+    "dist:win": "npm run build && node scripts/with-electron-env.mjs electron-builder --win",
+    "dist:linux": "npm run build && node scripts/with-electron-env.mjs electron-builder --linux"
+  },
+  "dependencies": {
+    "@xliff-translator/core": "*",
+    "@xliff-translator/server": "*",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "multer": "^2.0.1"
+  },
+  "devDependencies": {
+    "electron": "35.7.5",
+    "electron-builder": "^26.0.12",
+    "esbuild": "^0.25.5",
+    "typescript": "^5.8.3"
+  },
+  "build": {
+    "appId": "com.xliff-translator.app",
+    "productName": "XLIFF Translator",
+    "copyright": "Copyright © 2026 XLIFF Translator",
+    "directories": {
+      "output": "release",
+      "buildResources": "resources"
+    },
+    "files": [
+      "dist/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "../web/dist",
+        "to": "web",
+        "filter": ["**/*"]
+      }
+    ],
+    "asar": true,
+    "icon": "resources/icon.png",
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["arm64", "x64"]
+        },
+        "zip"
+      ]
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        "portable"
+      ]
+    },
+    "linux": {
+      "category": "Office",
+      "target": ["AppImage", "deb"],
+      "maintainer": "XLIFF Translator"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  }
+}

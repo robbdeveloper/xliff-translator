@@ -3,6 +3,16 @@
   "version": "1.0.0",
   "type": "module",
   "main": "./dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./app": {
+      "types": "./dist/app.d.ts",
+      "import": "./dist/app.js"
+    }
+  },
   "scripts": {
     "dev": "NODE_OPTIONS=--dns-result-order=ipv4first tsx watch src/index.ts",
     "build": "tsc",

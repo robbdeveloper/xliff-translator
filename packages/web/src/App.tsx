@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import JSZip from 'jszip';
 import type { FileSummary, ProjectStats, TranslationProgress } from './api';
 import {
@@ -11,6 +11,17 @@ import {
 
 const API_KEY_STORAGE = 'xliff-translator-api-key';
 const PROVIDER_STORAGE = 'xliff-translator-provider';
+const MODEL_STORAGE = 'xliff-translator-model';
+const BATCH_SIZE_STORAGE = 'xliff-translator-batch-size';
+
+function defaultModel(provider: 'openai' | 'claude'): string {
+  return provider === 'openai' ? 'gpt-4o-mini' : 'claude-sonnet-4-20250514';
+}
+
+function readProvider(): 'openai' | 'claude' {
+  const stored = localStorage.getItem(PROVIDER_STORAGE);
+  return stored === 'claude' ? 'claude' : 'openai';
+}
 
 function statusClass(status: string): string {
   switch (status) {
@@ -38,14 +49,37 @@ export default function App() {
   const [progress, setProgress] = useState<TranslationProgress | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState('');
-  const [provider, setProvider] = useState<'openai' | 'claude'>(() =>
-    (localStorage.getItem(PROVIDER_STORAGE) as 'openai' | 'claude') ?? 'openai'
-  );
+  const [provider, setProvider] = useState<'openai' | 'claude'>(readProvider);
   const [apiKey, setApiKey] = useState(() => localStorage.getItem(API_KEY_STORAGE) ?? '');
-  const [model, setModel] = useState(provider === 'openai' ? 'gpt-4o-mini' : 'claude-sonnet-4-20250514');
-  const [batchSize, setBatchSize] = useState(1);
+  const [model, setModel] = useState(
+    () => localStorage.getItem(MODEL_STORAGE) ?? defaultModel(readProvider())
+  );
+  const [batchSize, setBatchSize] = useState(() => {
+    const stored = Number(localStorage.getItem(BATCH_SIZE_STORAGE));
+    return Number.isFinite(stored) && stored >= 1 && stored <= 8 ? stored : 1;
+  });
   const [diagnoseResult, setDiagnoseResult] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    localStorage.setItem(PROVIDER_STORAGE, provider);
+  }, [provider]);
+
+  useEffect(() => {
+    localStorage.setItem(MODEL_STORAGE, model);
+  }, [model]);
+
+  useEffect(() => {
+    localStorage.setItem(BATCH_SIZE_STORAGE, String(batchSize));
+  }, [batchSize]);
+
+  useEffect(() => {
+    if (apiKey.trim()) {
+      localStorage.setItem(API_KEY_STORAGE, apiKey.trim());
+    } else {
+      localStorage.removeItem(API_KEY_STORAGE);
+    }
+  }, [apiKey]);
 
   const handleFiles = useCallback(async (fileList: FileList | File[]) => {
     const arr = Array.from(fileList).filter((f) =>
@@ -84,8 +118,6 @@ export default function App() {
       setError('Upload files and enter an API key first');
       return;
     }
-    localStorage.setItem(API_KEY_STORAGE, apiKey.trim());
-    localStorage.setItem(PROVIDER_STORAGE, provider);
     setTranslating(true);
     setError(null);
     setProgress(null);
@@ -252,7 +284,7 @@ export default function App() {
                 onChange={(e) => {
                   const p = e.target.value as 'openai' | 'claude';
                   setProvider(p);
-                  setModel(p === 'openai' ? 'gpt-4o-mini' : 'claude-sonnet-4-20250514');
+                  setModel(defaultModel(p));
                 }}
               >
                 <option value="openai">OpenAI</option>
