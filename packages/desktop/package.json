@@ -4,6 +4,7 @@
   "private": true,
   "description": "Desktop app for XLIFF Translator",
   "author": "XLIFF Translator",
+  "desktopName": "xliff-translator",
   "main": "dist/main.js",
   "scripts": {
     "generate-icon": "node scripts/generate-icon.mjs",
@@ -75,7 +76,6 @@
       "target": ["AppImage", "deb"],
       "maintainer": "XLIFF Translator",
       "executableName": "xliff-translator",
-      "desktopName": "xliff-translator",
       "syncDesktopName": true
     },
     "nsis": {
