@@ -16,6 +16,7 @@
     "desktop:dist:win": "npm run build:desktop && npm run dist:win -w @xliff-translator/desktop",
     "desktop:dist:linux": "npm run build:desktop && npm run dist:linux -w @xliff-translator/desktop",
     "test": "npm run test -w @xliff-translator/core",
+    "check-release-version": "node scripts/check-release-version.mjs",
     "start": "npm run start -w @xliff-translator/server"
   },
   "devDependencies": {
