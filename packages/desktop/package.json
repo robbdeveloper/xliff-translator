@@ -80,9 +80,11 @@
       "category": "Office",
       "target": ["AppImage", "deb"],
       "maintainer": "XLIFF Translator <https://github.com/robbdeveloper/xliff-translator>",
-      "packageName": "xliff-translator",
       "executableName": "xliff-translator",
       "syncDesktopName": true
+    },
+    "deb": {
+      "packageName": "xliff-translator"
     },
     "nsis": {
       "oneClick": false,
