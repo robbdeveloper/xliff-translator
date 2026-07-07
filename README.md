@@ -166,7 +166,7 @@ Tests use the sample fixture in `examples/sample-job-1.xliff`.
 
 Releases are automated with GitHub Actions when you push a version tag.
 
-1. Update the version in `package.json` and `packages/desktop/package.json`
+1. Update the version in every `package.json` (root and all packages under `packages/`)
 2. Commit the version bump
 3. Create and push a tag:
 

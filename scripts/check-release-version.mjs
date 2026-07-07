@@ -1,5 +1,5 @@
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { readFileSync, readdirSync } from 'node:fs';
+import { join, resolve } from 'node:path';
 
 const tag =
   process.env.GITHUB_REF_NAME ??
@@ -21,25 +21,29 @@ if (!/^\d+\.\d+\.\d+/.test(expectedVersion)) {
   process.exit(1);
 }
 
-const rootPkg = JSON.parse(
-  readFileSync(resolve('package.json'), 'utf8')
-);
-const desktopPkg = JSON.parse(
-  readFileSync(resolve('packages/desktop/package.json'), 'utf8')
-);
+function collectPackageJsonPaths() {
+  const paths = ['package.json'];
+  const packagesDir = resolve('packages');
+
+  for (const entry of readdirSync(packagesDir, { withFileTypes: true })) {
+    if (entry.isDirectory()) {
+      paths.push(join('packages', entry.name, 'package.json'));
+    }
+  }
+
+  return paths.sort();
+}
 
 const errors = [];
 
-if (rootPkg.version !== expectedVersion) {
-  errors.push(
-    `Root package.json version is "${rootPkg.version}", expected "${expectedVersion}" for tag ${tag}`
-  );
-}
+for (const pkgPath of collectPackageJsonPaths()) {
+  const pkg = JSON.parse(readFileSync(resolve(pkgPath), 'utf8'));
 
-if (desktopPkg.version !== expectedVersion) {
-  errors.push(
-    `packages/desktop/package.json version is "${desktopPkg.version}", expected "${expectedVersion}" for tag ${tag}`
-  );
+  if (pkg.version !== expectedVersion) {
+    errors.push(
+      `${pkgPath} version is "${pkg.version}", expected "${expectedVersion}" for tag ${tag}`
+    );
+  }
 }
 
 if (errors.length > 0) {
@@ -50,4 +54,6 @@ if (errors.length > 0) {
   process.exit(1);
 }
 
-console.log(`Release version check passed for ${tag}`);
+console.log(
+  `Release version check passed for ${tag} (${collectPackageJsonPaths().length} packages)`
+);
