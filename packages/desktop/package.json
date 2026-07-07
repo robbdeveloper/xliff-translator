@@ -4,6 +4,11 @@
   "private": true,
   "description": "Desktop app for XLIFF Translator",
   "author": "XLIFF Translator",
+  "homepage": "https://github.com/robbdeveloper/xliff-translator",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/robbdeveloper/xliff-translator.git"
+  },
   "desktopName": "xliff-translator",
   "main": "dist/main.js",
   "scripts": {
@@ -74,7 +79,8 @@
     "linux": {
       "category": "Office",
       "target": ["AppImage", "deb"],
-      "maintainer": "XLIFF Translator",
+      "maintainer": "XLIFF Translator <https://github.com/robbdeveloper/xliff-translator>",
+      "packageName": "xliff-translator",
       "executableName": "xliff-translator",
       "syncDesktopName": true
     },
