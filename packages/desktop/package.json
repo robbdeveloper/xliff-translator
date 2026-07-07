@@ -10,11 +10,11 @@
     "build:main": "tsc",
     "build": "npm run generate-icon && npm run build:main",
     "dev": "npm run build:main && node scripts/with-electron-env.mjs electron .",
-    "pack": "npm run build && node scripts/with-electron-env.mjs electron-builder --dir",
-    "dist": "npm run build && node scripts/with-electron-env.mjs electron-builder",
-    "dist:mac": "npm run build && node scripts/with-electron-env.mjs electron-builder --mac",
-    "dist:win": "npm run build && node scripts/with-electron-env.mjs electron-builder --win",
-    "dist:linux": "npm run build && node scripts/with-electron-env.mjs electron-builder --linux"
+    "pack": "npm run build && node scripts/with-electron-env.mjs electron-builder --dir --publish never",
+    "dist": "npm run build && node scripts/with-electron-env.mjs electron-builder --publish never",
+    "dist:mac": "npm run build && node scripts/with-electron-env.mjs electron-builder --mac --publish never",
+    "dist:win": "npm run build && node scripts/with-electron-env.mjs electron-builder --win --publish never",
+    "dist:linux": "npm run build && node scripts/with-electron-env.mjs electron-builder --linux --publish never"
   },
   "dependencies": {
     "@xliff-translator/core": "*",
@@ -50,6 +50,7 @@
     ],
     "asar": true,
     "icon": "resources/icon.png",
+    "publish": null,
     "mac": {
       "category": "public.app-category.productivity",
       "target": [

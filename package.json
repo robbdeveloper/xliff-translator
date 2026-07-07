@@ -2,6 +2,10 @@
   "name": "xliff-translator",
   "private": true,
   "version": "1.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/robbdeveloper/xliff-translator.git"
+  },
   "workspaces": [
     "packages/*"
   ],
