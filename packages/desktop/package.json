@@ -84,7 +84,8 @@
       "syncDesktopName": true
     },
     "deb": {
-      "packageName": "xliff-translator"
+      "packageName": "xliff-translator",
+      "artifactName": "xliff-translator_${version}_${arch}.${ext}"
     },
     "nsis": {
       "oneClick": false,
