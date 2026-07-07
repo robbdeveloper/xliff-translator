@@ -73,7 +73,10 @@
     "linux": {
       "category": "Office",
       "target": ["AppImage", "deb"],
-      "maintainer": "XLIFF Translator"
+      "maintainer": "XLIFF Translator",
+      "executableName": "xliff-translator",
+      "desktopName": "xliff-translator",
+      "syncDesktopName": true
     },
     "nsis": {
       "oneClick": false,
