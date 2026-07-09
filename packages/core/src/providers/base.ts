@@ -76,11 +76,15 @@ export function parseApiHttpError(status: number, body: string, provider: string
   return new ProviderError(message, fatal);
 }
 
-export function buildSystemPrompt(sourceLang: string, targetLang: string): string {
+export function buildSystemPrompt(
+  sourceLang: string,
+  targetLang: string,
+  instructions?: string
+): string {
   const source = getLanguageName(sourceLang);
   const target = getLanguageName(targetLang);
 
-  return `You are a professional translator for WordPress/WPML XLIFF content exported from websites using Elementor, ACF, and custom post types.
+  const base = `You are a professional translator for WordPress/WPML XLIFF content exported from websites using Elementor, ACF, and custom post types.
 
 Translate from ${source} to ${target}.
 
@@ -98,6 +102,16 @@ Rules:
 
 Output format:
 {"translations":[{"id":"u1","text":"translated text"},{"id":"u2","text":"..."}]}`;
+
+  const trimmed = instructions?.trim();
+  if (!trimmed) return base;
+
+  return `${base}
+
+Additional user translation instructions:
+${trimmed}
+
+Important: Follow these user instructions when compatible with the rules above. If a user instruction conflicts with placeholder, HTML, shortcode, or URL preservation rules, the preservation rules take priority.`;
 }
 
 export function buildUserPrompt(items: TranslateBatchItem[]): string {

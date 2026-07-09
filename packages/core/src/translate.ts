@@ -130,7 +130,8 @@ export async function translateProject(
             ...progress,
             lastError: `Translating batch (${done}/${total})…`,
           });
-        }
+        },
+        options.instructions
       );
     } catch (error) {
       const message =

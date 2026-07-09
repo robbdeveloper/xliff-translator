@@ -79,7 +79,8 @@ export interface TranslationProvider {
     items: TranslateBatchItem[],
     sourceLang: string,
     targetLang: string,
-    onProgress?: (done: number, total: number) => void
+    onProgress?: (done: number, total: number) => void,
+    instructions?: string
   ): Promise<TranslateBatchResult[]>;
 }
 
@@ -88,6 +89,7 @@ export interface TranslateOptions {
   sourceLanguage: string;
   targetLanguage: string;
   batchSize?: number;
+  instructions?: string;
   onProgress?: (progress: TranslationProgress) => void;
 }
 

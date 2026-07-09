@@ -82,6 +82,7 @@ export async function translateSession(
     sourceLanguage?: string;
     targetLanguage?: string;
     batchSize?: number;
+    instructions?: string;
     onProgress?: (progress: TranslationProgress) => void;
   }
 ): Promise<TranslateCompletePayload> {
@@ -96,6 +97,7 @@ export async function translateSession(
       sourceLanguage: options.sourceLanguage,
       targetLanguage: options.targetLanguage,
       batchSize: options.batchSize,
+      instructions: options.instructions,
     }),
   });
 

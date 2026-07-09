@@ -193,6 +193,7 @@ export function createServerApp(options: CreateServerAppOptions = {}): Express {
       sourceLanguage,
       targetLanguage,
       batchSize,
+      instructions,
     } = req.body as {
       sessionId?: string;
       provider?: 'openai' | 'claude';
@@ -201,6 +202,7 @@ export function createServerApp(options: CreateServerAppOptions = {}): Express {
       sourceLanguage?: string;
       targetLanguage?: string;
       batchSize?: number;
+      instructions?: string;
     };
 
     if (!sid || !sessions.has(sid)) {
@@ -240,11 +242,14 @@ export function createServerApp(options: CreateServerAppOptions = {}): Express {
 
     try {
       const translationProvider = createProvider(provider, normalizedKey, model);
+      const trimmedInstructions = instructions?.trim().slice(0, 2000) || undefined;
+
       await translateProject(project, {
         provider: translationProvider,
         sourceLanguage: srcLang,
         targetLanguage: tgtLang,
         batchSize,
+        instructions: trimmedInstructions,
         onProgress: (progress) => send('progress', progress),
       });
 

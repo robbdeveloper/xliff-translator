@@ -23,10 +23,11 @@ async function callClaude(
   options: ClaudeProviderOptions,
   items: TranslateBatchItem[],
   sourceLang: string,
-  targetLang: string
+  targetLang: string,
+  instructions?: string
 ): Promise<TranslateBatchResult[]> {
   const model = options.model ?? 'claude-sonnet-4-20250514';
-  const systemPrompt = buildSystemPrompt(sourceLang, targetLang);
+  const systemPrompt = buildSystemPrompt(sourceLang, targetLang, instructions);
 
   const response = await fetchWithTimeout('https://api.anthropic.com/v1/messages', {
     method: 'POST',
@@ -68,11 +69,11 @@ async function callClaude(
 export function createClaudeProvider(options: ClaudeProviderOptions): TranslationProvider {
   return {
     name: 'claude',
-    async translateBatch(items, sourceLang, targetLang, onProgress) {
+    async translateBatch(items, sourceLang, targetLang, onProgress, instructions) {
       return translateWithBatchFallback(
         items,
         (chunk) =>
-          withRetry(() => callClaude(options, chunk, sourceLang, targetLang)),
+          withRetry(() => callClaude(options, chunk, sourceLang, targetLang, instructions)),
         onProgress
       );
     },

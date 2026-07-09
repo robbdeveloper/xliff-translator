@@ -70,11 +70,23 @@ npm run desktop:dev
 1. Export translation jobs from WPML as **XLIFF 1.2**
 2. Upload one or more `.xliff` / `.xlf` files
 3. Choose provider (OpenAI or Claude) and paste your API key
-4. Optionally run **Test Connection** before translating
-5. Click **Start Translation** and watch live progress
-6. Review units, edit any target text if needed
-7. Click **Download ZIP**
-8. Import the translated XLIFF files back into WPML
+4. Optionally add **Translation instructions** to guide terminology, brand names, tone, or context
+5. Optionally run **Test Connection** before translating
+6. Click **Start Translation** and watch live progress
+7. Review units, edit any target text if needed
+8. Click **Download ZIP**
+9. Import the translated XLIFF files back into WPML
+
+## Translation Instructions
+
+The optional **Translation instructions** field in the settings sidebar lets you add project-specific guidance for the AI, such as:
+
+- Brand names to keep untranslated (e.g. `Florence2Book`)
+- Preferred terminology or glossary choices
+- Tone or audience (formal, hospitality, legal, etc.)
+- Domain context the model should know
+
+Instructions are saved in `localStorage` on your machine and are appended to the system prompt for every translation batch. They do not override the app's preservation rules for HTML, shortcodes, URLs, and placeholder tokens.
 
 ## API Key Handling
 
@@ -150,7 +162,7 @@ Units skipped automatically:
 
 - Translation runs in batches for reliability; large jobs take time
 - Very large HTML blocks may need manual review
-- Brand names and addresses are translated unless you edit them
+- Brand names and addresses may still need manual review unless you add instructions for them
 - Translation sessions are stored in memory and are lost if the app restarts
 - Release builds are currently unsigned
 

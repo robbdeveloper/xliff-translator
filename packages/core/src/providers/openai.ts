@@ -23,10 +23,11 @@ async function callOpenAI(
   options: OpenAIProviderOptions,
   items: TranslateBatchItem[],
   sourceLang: string,
-  targetLang: string
+  targetLang: string,
+  instructions?: string
 ): Promise<TranslateBatchResult[]> {
   const model = options.model ?? 'gpt-4o-mini';
-  const systemPrompt = buildSystemPrompt(sourceLang, targetLang);
+  const systemPrompt = buildSystemPrompt(sourceLang, targetLang, instructions);
 
   const response = await fetchWithTimeout('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
@@ -64,11 +65,11 @@ async function callOpenAI(
 export function createOpenAIProvider(options: OpenAIProviderOptions): TranslationProvider {
   return {
     name: 'openai',
-    async translateBatch(items, sourceLang, targetLang, onProgress) {
+    async translateBatch(items, sourceLang, targetLang, onProgress, instructions) {
       return translateWithBatchFallback(
         items,
         (chunk) =>
-          withRetry(() => callOpenAI(options, chunk, sourceLang, targetLang)),
+          withRetry(() => callOpenAI(options, chunk, sourceLang, targetLang, instructions)),
         onProgress
       );
     },

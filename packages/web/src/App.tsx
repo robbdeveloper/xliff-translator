@@ -13,6 +13,7 @@ const API_KEY_STORAGE = 'xliff-translator-api-key';
 const PROVIDER_STORAGE = 'xliff-translator-provider';
 const MODEL_STORAGE = 'xliff-translator-model';
 const BATCH_SIZE_STORAGE = 'xliff-translator-batch-size';
+const INSTRUCTIONS_STORAGE = 'xliff-translator-instructions';
 
 function defaultModel(provider: 'openai' | 'claude'): string {
   return provider === 'openai' ? 'gpt-4o-mini' : 'claude-sonnet-4-20250514';
@@ -58,6 +59,9 @@ export default function App() {
     const stored = Number(localStorage.getItem(BATCH_SIZE_STORAGE));
     return Number.isFinite(stored) && stored >= 1 && stored <= 8 ? stored : 1;
   });
+  const [instructions, setInstructions] = useState(
+    () => localStorage.getItem(INSTRUCTIONS_STORAGE) ?? ''
+  );
   const [diagnoseResult, setDiagnoseResult] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -80,6 +84,14 @@ export default function App() {
       localStorage.removeItem(API_KEY_STORAGE);
     }
   }, [apiKey]);
+
+  useEffect(() => {
+    if (instructions.trim()) {
+      localStorage.setItem(INSTRUCTIONS_STORAGE, instructions);
+    } else {
+      localStorage.removeItem(INSTRUCTIONS_STORAGE);
+    }
+  }, [instructions]);
 
   const handleFiles = useCallback(async (fileList: FileList | File[]) => {
     const arr = Array.from(fileList).filter((f) =>
@@ -128,6 +140,7 @@ export default function App() {
         apiKey: apiKey.trim(),
         model,
         batchSize,
+        instructions: instructions.trim() || undefined,
         onProgress: setProgress,
       });
       setStats(result.stats);
@@ -312,6 +325,16 @@ export default function App() {
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
                 placeholder={provider === 'openai' ? 'sk-…' : 'sk-ant-…'}
+              />
+            </label>
+            <label>
+              Translation instructions (optional)
+              <textarea
+                className="instructions-input"
+                value={instructions}
+                onChange={(e) => setInstructions(e.target.value)}
+                rows={4}
+                placeholder="e.g. Keep brand names like Florence2Book untranslated. Use formal tone. Translate 'camera' as 'room' in hospitality context."
               />
             </label>
             <button className="secondary" type="button" onClick={() => void testConnection()}>
